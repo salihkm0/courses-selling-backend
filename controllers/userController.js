@@ -4,16 +4,15 @@ import { generateToken } from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
   try {
-    const { email, password, firstName, lastName } = req.body
+    const { email, password, firstName, lastName } = req.body;
     console.log(email);
- 
+
     const userExist = await User.findOne({ email });
-    
-    
+
     if (userExist) {
       return res.send("User is already exist");
     }
-    
+
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(password, saltRounds);
 
@@ -23,7 +22,7 @@ export const signup = async (req, res) => {
       lastName,
       hashPassword,
     });
-    
+
     const newUserCreated = await newUser.save();
 
     if (!newUserCreated) {
@@ -31,10 +30,10 @@ export const signup = async (req, res) => {
     }
 
     const token = generateToken(email);
-    
-    res.cookie("token", token)
+
+    res.cookie("token", token);
     res.send("Signed successfully!");
-    console.log("token : ",token)
+    console.log("token : ", token);
   } catch (error) {
     console.log(error, "Something wrong");
     res.status(500).send("Internal Server Error");
@@ -53,7 +52,9 @@ export const signin = async (req, res) => {
       return res.send("User not found");
     }
 
-    const matchPassword = bcrypt.compare(password, user.hashPassword);
+    const matchPassword = await bcrypt.compare(password, user.hashPassword);
+
+    console.log(matchPassword);
 
     if (!matchPassword) {
       return res.send("Password is not correct");
@@ -61,10 +62,20 @@ export const signin = async (req, res) => {
 
     const token = generateToken(email);
     res.cookie("token", token);
-    res.send("Logged in!");
-    console.log("token : ",token)
+    res.send({
+      message: "Logged in!",
+      success: true,
+      token: token,
+    });
+    console.log("token : ", token);
   } catch (error) {
     console.log(error, "Something wrong");
-    res.status(500).send("Internal Server Error");
+    res
+      .status(500)
+      .send({
+        err: "Internal Server Error",
+        success: false,
+        token: token,
+      });
   }
 };

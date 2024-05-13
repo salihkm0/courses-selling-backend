@@ -10,10 +10,10 @@ const app = express();
 
 // http://localhost:5173/ 
 const corsOptions = {
-  // origin: 'http://localhost:5173/',
-  // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  origin: 'http://localhost:5173',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  // optionsSuccessStatus: 204,
+  optionsSuccessStatus: 204,
 };
 
 
