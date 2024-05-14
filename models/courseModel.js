@@ -19,10 +19,14 @@ const courseSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    offPrice: {
+      type: Number,
+      required: true,
+    },
     image: {
       type: String,
     },
-    instructor: [{ type: mongoose.Types.ObjectId, ref: "Instructor" }],
+    instructor: { type: mongoose.Types.ObjectId, ref: "Instructor" },
   },
   { timestamps: true }
 );
